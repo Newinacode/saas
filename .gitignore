@@ -127,3 +127,5 @@ staticfiles
 
 # Tailwind NodeModules
 **/node_modules
+
+*/db.sqlite3
