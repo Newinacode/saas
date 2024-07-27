@@ -5,7 +5,8 @@ from django.conf import settings
 
 VENDOR_STATICFILES = {
     "flowbite.min.css":"https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.css",
-    "flowbite.min.js":"https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js"
+    "flowbite.min.js":"https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js",
+    "flowbite.min.js.map":"https://cdn.jsdelivr.net/npm/flowbite@2.4.1/dist/flowbite.min.js.map"
 }
 
 
