@@ -51,7 +51,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     
     # myapps
-    "visits"
+    "visits",
+    "commando"
 ]
 
 MIDDLEWARE = [
@@ -96,7 +97,7 @@ DATABASES = {
 }
 
 
-DATABASE_URL = config("DATABASE_URL",default=None,cast=str)
+DATABASE_URL = config("DATABASE_URL",default=None)
 CONN_MAX_AGE = config("CONN_MAX_AGE",default=30,cast=int)
 
 if DATABASE_URL is not None:
@@ -145,8 +146,25 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.1/howto/static-files/
 
 STATIC_URL = 'static/'
+STATICFILES_BASE_DIR = BASE_DIR / "staticfiles"
+STATICFILES_BASE_DIR.mkdir(exist_ok=True,parents=True)
+STATICFILES_VENDOR_DIR = STATICFILES_BASE_DIR / "vendors"
+
+
+# source for python manage.py collectstatic
+STATICFILES_DIRS = [
+    STATICFILES_BASE_DIR,
+]
+
+
+# output for python manage.py collectstatic
+# local cdn
+STATIC_ROOT = BASE_DIR.parent / "local-cdn"
+
+
 
 # Default primary key field type
-# https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
+# https://docs.djangoproject.com/en/4.1/sref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+ 
