@@ -9,25 +9,62 @@ https://docs.djangoproject.com/en/4.1/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
-
+import ssl
 from pathlib import Path
 import os
+import certifi
 from decouple import config
+import smtplib
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST=config( "EMAIL_HOST",cast=str,default="smtp.gmail.com")
+EMAIL_PORT=config("EMAIL_PORT",cast=str,default='587')
+EMAIL_USE_TLS=config("EMAIL_USE_TLS",cast=bool,default=False)
+EMAIL_USE_SSL=config("EMAIL_USE_SSL",cast=bool,default=False)
+EMAIL_HOST_USER=config("EMAIL_HOST_USER",cast=str,default=None)
+EMAIL_HOST_PASSWORD=config("EMAIL_HOST_PASSWORD",cast=str,default=None)
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
+context = ssl.create_default_context(cafile=certifi.where())
+EMAIL_SSL_CONTEXT = context
+
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = config("DJANGO_SECRET_KEY")
+
+ADMIN_USER_NAME=config("ADMIN_USER_NAME",default="Admin User")
+ADMIN_USER_EMAIL=config("ADMIN_USER_EMAIL",default=None)
+
+
+MANAGERS=[]
+ADMINS=[]
+
+if all([ADMIN_USER_NAME,ADMIN_USER_EMAIL]):
+    ADMINS+=[
+        (f'{ADMIN_USER_NAME}',f'{ADMIN_USER_EMAIL}')
+    ]
+    MANAGERS = ADMINS
+
 
 
 DEBUG = config("DJANGO_DEBUG",cast=bool)
 
 
 # SECURITY WARNING: don't run with debug turned on in production!
+def send_custom_email(subject, message, from_email, recipient_list):
+    try:
+        with smtplib.SMTP(EMAIL_HOST, EMAIL_PORT) as server:
+            server.starttls(context=context)
+            server.login(EMAIL_HOST_USER, EMAIL_HOST_PASSWORD)
+            server.sendmail(from_email, recipient_list, f"Subject: {subject}\n\n{message}")
+    except Exception as e:
+        print(f"Error sending email: {e}")
+
+
+
+# send_custom_email('Test Subject', 'Test Message', EMAIL_HOST_USER, ['rupeshacharya2000@gmail.com'])
 
 
 ALLOWED_HOSTS = [
@@ -52,7 +89,19 @@ INSTALLED_APPS = [
     
     # myapps
     "visits",
-    "commando"
+    "commando",
+
+    "allauth_ui",
+    "widget_tweaks",
+    "slippers",
+
+
+    #third party auth
+     'allauth',
+    'allauth.account',
+    'allauth.socialaccount.providers.github',
+
+
 ]
 
 MIDDLEWARE = [
@@ -63,7 +112,9 @@ MIDDLEWARE = [
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
+    "allauth.account.middleware.AccountMiddleware",
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
 ]
 
 ROOT_URLCONF = 'cfehome.urls'
@@ -86,6 +137,13 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'cfehome.wsgi.application'
 
+
+
+
+
+SOCIALACCOUNT_PROVIDERS = {
+
+}
 
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
@@ -129,6 +187,21 @@ AUTH_PASSWORD_VALIDATORS = [
         'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
+
+LOGIN_REDIRECT_URL = '/'
+ACCOUNT_AUTHENTICATION_METHOD = "username_email"
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_REQUIRED="mandatory"
+ACCOUNT_EMAIL_SUBJECT_PREFIX = "[CFE] "
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+
+]
+
 
 
 # Internationalization
