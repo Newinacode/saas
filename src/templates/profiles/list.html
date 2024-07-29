@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+
+{% block head_title %}
+HomePage - {{block.super}}
+{% endblock head_title %}
+{% block content %}
+
+{% include 'snippets/welcome-user-msg.html' %}
+
+
+<h1>Users</h1>
+
+{%if perms.auth %}
+<div>
+
+    {% for user in object_list %}
+    
+    <li>
+        <a href="{% url 'user-profile' user.username %} ">
+            {{user.username}}
+            
+        </a>
+    </li>
+    
+    
+    {% endfor %}
+    
+    
+    
+    </div>
+
+
+
+    {% else %}
+    <div>
+        <h1>You are not per</h1>
+    </div>
+
+{% endif %}
+{% endblock content %}

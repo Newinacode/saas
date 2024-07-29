@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+
+
+{% block head_title %}
+HomePage - {{block.super}}
+{% endblock head_title %}
+{% block content %}
+
+{% include 'snippets/welcome-user-msg.html' %}
+
+
+<h1>Users</h1>
+
+{%if perms.auth %}
+{% if perms.auth.view_user or owner %}
+<div>
+    {{instance.first_name}} - {{instance.last_name}}
+    {{instance.last_login}}
+    
+    </div>
+
+
+
+    {% else %}
+    <div>
+        <h1>You are not per</h1>
+    </div>
+
+{% endif %}
+{% endif %}
+
+{% endblock content %}

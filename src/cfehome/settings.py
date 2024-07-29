@@ -90,16 +90,26 @@ INSTALLED_APPS = [
     # myapps
     "visits",
     "commando",
+    "profiles",
+    "subscriptions",
+
+
 
     "allauth_ui",
     "widget_tweaks",
     "slippers",
-
-
+    
     #third party auth
-     'allauth',
+    'allauth',
     'allauth.account',
+    'allauth.socialaccount',
     'allauth.socialaccount.providers.github',
+    
+
+
+    
+
+
 
 
 ]
@@ -140,34 +150,37 @@ WSGI_APPLICATION = 'cfehome.wsgi.application'
 
 
 
-
-SOCIALACCOUNT_PROVIDERS = {
-
-}
-
 # Database
 # https://docs.djangoproject.com/en/4.1/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
-}
 
 
 DATABASE_URL = config("DATABASE_URL",default=None)
 CONN_MAX_AGE = config("CONN_MAX_AGE",default=30,cast=int)
 
-if DATABASE_URL is not None:
-    import dj_database_url
+if DEBUG:
     DATABASES = {
-    'default': dj_database_url.config(
-        default=DATABASE_URL,
-        conn_max_age=CONN_MAX_AGE,
-        conn_health_checks=True,
-    )
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': BASE_DIR / 'db.sqlite3',
+        }
     }
+else:
+    if DATABASE_URL is not None:
+        import dj_database_url
+        DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=CONN_MAX_AGE,
+            conn_health_checks=True,
+        )
+        }
+
+SOCIALACCOUNT_PROVIDERS = {
+    "github":{
+        "VERIFIED_EMAIL":True
+    }
+}
 
 
 # Password validation
