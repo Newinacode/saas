@@ -92,7 +92,7 @@ INSTALLED_APPS = [
     "commando",
     "profiles",
     "subscriptions",
-
+    "customers",
 
 
     "allauth_ui",
@@ -207,10 +207,10 @@ ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_REQUIRED="mandatory"
 ACCOUNT_EMAIL_SUBJECT_PREFIX = "[CFE] "
 AUTHENTICATION_BACKENDS = [
-    # Needed to login by username in Django admin, regardless of `allauth`
+
     'django.contrib.auth.backends.ModelBackend',
 
-    # `allauth` specific authentication methods, such as login by email
+
     'allauth.account.auth_backends.AuthenticationBackend',
 
 ]
@@ -229,8 +229,7 @@ USE_I18N = True
 USE_TZ = True
 
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/4.1/howto/static-files/
+
 
 STATIC_URL = 'static/'
 STATICFILES_BASE_DIR = BASE_DIR / "staticfiles"
