@@ -32,6 +32,9 @@ media
 *.py[cod] 
 *$py.class 
 
+# juypter notebook file
+*.ipynb
+
 # Distribution / packaging 
 .Python build/ 
 develop-eggs/ 
@@ -50,6 +53,7 @@ wheels/
 *.egg 
 *.manifest 
 *.spec 
+.jovianrc
 
 # Installer logs 
 pip-log.txt 
